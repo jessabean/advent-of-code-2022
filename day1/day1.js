@@ -6,11 +6,11 @@ function loadData() {
   return data;
 }
 
-function part1() {
+function countTopN(n) {
   const input = loadData();
   const bags = input.split('\n\n');
 
-  let max = -1;
+  let sums = [];
 
   for(let bag of bags) {
     const snackz = bag.split('\n');
@@ -20,14 +20,22 @@ function part1() {
       sum += Number(snack);
     }
 
-    if (sum > max) {
-      max = sum;
-    }
+    sums.push(sum);
   }
 
-  return max;
+  sums.sort();
+
+  const mostCalories = sums.slice(0-n);
+  let totalCalories = 0;
+
+  for (let calories of mostCalories) {
+    totalCalories += calories;
+  }
+
+  return totalCalories;
 }
 
 export default function day1() {
-  console.log(part1());
+  console.log('part1', countTopN(1));
+  console.log('part2', countTopN(3));
 }
