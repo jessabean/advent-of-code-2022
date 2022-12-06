@@ -26,9 +26,30 @@ const part1 = (rawInput: string) => {
 };
 
 const part2 = (rawInput: string) => {
+  const groupSize = 3;
   const input = parseInput(rawInput);
+  const groups = Array.from(
+    new Array(Math.ceil(input.length / groupSize)),
+    (_, i) => input.slice(i * groupSize, i * groupSize + groupSize)
+  );
 
-  return;
+  let priorityScore = 0;
+
+  for(let group of groups) {
+    const sack1 = group[0] || '';
+    const sack2 = group[1] || '';
+    const sack3 = group[2] || '';
+
+    for(let char of sack1) {
+      if(sack2.includes(char) && sack3.includes(char)) {
+        let charIndex = priorityList.indexOf(char);
+        priorityScore += charIndex + 1
+        break
+      }
+    }
+  }  
+
+  return priorityScore;
 };
 
 const testData = `vJrwpWtwJgWrhcsFMMfFFhFp
@@ -52,7 +73,7 @@ run({
     tests: [
       {
         input: testData,
-        expected: "",
+        expected: 70,
       },
     ],
     solution: part2,
