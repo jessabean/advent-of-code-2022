@@ -20,14 +20,16 @@ const containsArray = (pair1: string, pair2: string) => {
   return result;
 }
 
-const hasOverlaps = (pair1: string, pair2: string) => {
-  const pair1Start = parseRange(pair1, 0);
-  const pair2Start = parseRange(pair2, 0);
-  const pair1End = parseRange(pair1, 1);
-  const pair2End = parseRange(pair2, 1);
+const parseRangeToSet = (input: string) => {
+  const start = Number(input.split('-')[0]);
+  const end = Number(input.split('-')[1]);
+  let rangeSet = new Set();
 
-  return (pair2Start >= pair1Start && pair2Start <= pair1End) ||  
-    (pair1Start >= pair2Start && pair1Start <= pair2End);
+  for (let i = start; i <= end; i++) {
+    rangeSet.add(i);
+  }
+
+  return rangeSet;
 }
 
 const part1 = (rawInput: string) => {
@@ -47,11 +49,16 @@ const part1 = (rawInput: string) => {
 const part2 = (rawInput: string) => {
   const input = parseInput(rawInput);
   let overlappedPairs = 0;
-
+  
   for(let row of input) {
-    let overlaps = hasOverlaps(row[0], row[1]);
-    if(overlaps) {
-      overlappedPairs += 1;
+    const pair1Range = parseRangeToSet(row[0]);
+    const pair2Range = parseRangeToSet(row[1]);
+
+    for (let value of pair2Range.values()) {
+      if(pair1Range.has(value)) {
+        overlappedPairs += 1;
+        break;
+      }
     }
   }
 
