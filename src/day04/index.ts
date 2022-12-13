@@ -8,7 +8,6 @@ const parseRange = (input: string, position: number) => {
 }
 
 const containsArray = (pair1: string, pair2: string) => {
-  console.log(pair1, pair2);
   const pair1Start = parseRange(pair1, 0);
   const pair2Start = parseRange(pair2, 0);
   const pair1End = parseRange(pair1, 1);
@@ -21,10 +20,20 @@ const containsArray = (pair1: string, pair2: string) => {
   return result;
 }
 
+const hasOverlaps = (pair1: string, pair2: string) => {
+  const pair1Start = parseRange(pair1, 0);
+  const pair2Start = parseRange(pair2, 0);
+  const pair1End = parseRange(pair1, 1);
+  const pair2End = parseRange(pair2, 1);
+
+  return (pair2Start >= pair1Start && pair2Start <= pair1End) ||  
+    (pair1Start >= pair2Start && pair1Start <= pair2End);
+}
+
 const part1 = (rawInput: string) => {
   const input = parseInput(rawInput);
   let containedPairs = 0;
-  
+
   for(let row of input) {
     let contains = containsArray(row[0], row[1]);
     if(contains) {
@@ -37,8 +46,16 @@ const part1 = (rawInput: string) => {
 
 const part2 = (rawInput: string) => {
   const input = parseInput(rawInput);
+  let overlappedPairs = 0;
 
-  return;
+  for(let row of input) {
+    let overlaps = hasOverlaps(row[0], row[1]);
+    if(overlaps) {
+      overlappedPairs += 1;
+    }
+  }
+
+  return overlappedPairs;
 };
 
 const testData = `2-4,6-8
@@ -62,7 +79,7 @@ run({
     tests: [
       {
         input: testData,
-        expected: "",
+        expected: 4,
       },
     ],
     solution: part2,
