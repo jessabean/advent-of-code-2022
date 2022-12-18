@@ -3,14 +3,6 @@ import run from "aocrunner";
 const parseInput = (rawInput: string) => 
   rawInput.split('\n\n');
 
-const moveCrate = (stacks: Object, move: RegExpMatchArray) => {
-  const num = Number(move[0]);
-  const source = move[1];
-  const destination = move[2];
-
-  return stacks;
-}
-
 const part1 = (rawInput: string) => {
   const [rawStacks, rawMoves] = rawInput.split('\n\n');
   const parsedStacks = rawStacks.split('\n')
@@ -36,7 +28,6 @@ const part1 = (rawInput: string) => {
     .map((move) => move.match(/\d+/g));
 
   for(const line of parsedMoves) {
-    moveCrate(stacks, line!);
     const num = Number(line![0]);
     const source = line![1];
     const destination = line![2];
@@ -58,9 +49,47 @@ const part1 = (rawInput: string) => {
 };
 
 const part2 = (rawInput: string) => {
-  const input = parseInput(rawInput);
+  const [rawStacks, rawMoves] = rawInput.split('\n\n');
+  const parsedStacks = rawStacks.split('\n')
+  .map((line) =>
+    [...line].filter((value, index) => index%4 ===1))
+  const columns = parsedStacks.pop();
+  const stacks: { [key: string]: any } = {};
+  let topCrates = '';
 
-  return;
+  for(const row of parsedStacks) {
+    for(let i = 0; i < row.length; i++) {
+      if(row[i] !== ' ' && columns) {
+        if(!stacks[columns[i]]) {
+          stacks[columns[i]] = [];
+        }
+
+        stacks[columns[i]].unshift(row[i]);
+      }
+    }
+  }
+
+
+  const parsedMoves = rawMoves.split('\n')
+    .map((move) => move.match(/\d+/g));
+
+  for(const line of parsedMoves) {
+    const num = Number(line![0]);
+    const source = line![1];
+    const destination = line![2];
+
+    let crates = stacks[source].splice(-num)
+
+    if (!!crates) {
+      stacks[destination].push(...crates);
+    }
+  }
+
+  for(const stack of Object.values(stacks)) {
+    topCrates += stack.pop()
+  }
+
+  return topCrates;
 };
 
 const testData = 
@@ -88,7 +117,7 @@ run({
     tests: [
       {
         input: testData,
-        expected: "",
+        expected: "MCD",
       },
     ],
     solution: part2,
