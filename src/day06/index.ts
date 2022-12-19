@@ -30,8 +30,20 @@ const part1 = (rawInput: string) => {
 
 const part2 = (rawInput: string) => {
   const input = parseInput(rawInput);
+  let index = 0;
 
-  return;
+  for (let i = 0; i < input.length; i++) {
+    const substring = input.substring(i, i+14);
+    index = i+14;
+    if (isUnique(substring)) {
+      index = i+14;
+      break;
+    } else {
+      continue;
+    }
+  }
+
+  return index;
 };
 
 const testData = `mjqjpqmgbljsphdztnvjfqwrcgsmlb`;
@@ -50,7 +62,7 @@ run({
     tests: [
       {
         input: testData,
-        expected: "",
+        expected: 19,
       },
     ],
     solution: part2,
